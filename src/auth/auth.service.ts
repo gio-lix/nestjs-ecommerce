@@ -1,26 +1,64 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {ForbiddenException, Injectable} from '@nestjs/common';
+import {UserService} from "../user/user.service";
+import {JwtService} from "@nestjs/jwt";
+import {UserEntity} from "../user/entities/user.entity";
+import {CreateUserDto} from "../user/dto/create-user.dto";
+import {comparePasswords, encodePassword} from "../utils/bcrypt";
+import {LoginUserDto} from "../user/dto/login-user.dto";
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+    constructor(
+        private usersService: UserService,
+        private jwtService: JwtService) {
+    }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+    async validateUser(email: string, password: string): Promise<any> {
+        const user = await this.usersService.findByCond({email, password});
+        if (user && user.password === password) {
+            const {password, ...result} = user;
+            return result;
+        }
+        return null;
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    generateJwtToken(data: { id: number, email: string }) {
+        const payload = {email: data.email, sub: data.id};
+        return this.jwtService.sign(payload)
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+    async Register(dto: CreateUserDto) {
+
+        let password = encodePassword(dto.password)
+        try {
+            const newUser = await this.usersService.create({...dto, password})
+            return {
+                ...newUser,
+                token: this.generateJwtToken(newUser)
+            };
+        } catch (err) {
+            throw new ForbiddenException("something went wrong")
+        }
+
+
+    }
+
+
+    async login( body: LoginUserDto) {
+        const {email} = body
+        const me = await this.usersService.findByCond({email});
+
+        const match = comparePasswords(body.password ,me.password )
+        const {password, ...userData} = me
+
+        if (match) {
+            return {
+                ...userData,
+                token: this.generateJwtToken(userData)
+            };
+        } else {
+            return "Password Not Match"
+        }
+    }
 }

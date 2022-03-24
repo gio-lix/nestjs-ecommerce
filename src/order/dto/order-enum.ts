@@ -1,4 +1,4 @@
 export enum OrderStatusEnum  {
-    UNPAID = 'UNPAID',
-    PAID = 'PAID'
+    PAID = 'paid',
+    UNPAID = 'unpaid'
 }

@@ -1,1 +1,5 @@
-export class CreateCategoryDto {}
+import {CategoryEnum} from "../category-enum";
+
+export class CreateCategoryDto {
+    category: CategoryEnum
+}
