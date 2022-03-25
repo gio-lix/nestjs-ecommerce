@@ -5,6 +5,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Product} from "./entities/product.entity";
 import {CategoryService} from "../category/category.service";
 import {FilterProductDto} from "./dto/filter-product.dto";
+import {UpdateProductDto} from "./dto/update-product.dto";
 
 @Injectable()
 export class ProductsService {
@@ -44,32 +45,14 @@ export class ProductsService {
     }
 
     async deleteProductById(id: number): Promise<void> {
-        // const result = await this.productRepository.delete(id)
-
-        //this.postsRepository.find({ relations: ['author'] });
-        const found = await this.productRepository.findOne(id, { relations: ['user'] })
-
-
-        console.log("here", found.user.id)
-
-
-        // if (result.affected === 0) {
-        //     throw new NotFoundException(`Task with ID ${id} not found`)
-        // }
+        return await this.productRepository.deleteProductById(id)
     }
 
-    // updateProduct(id: number, body: CreateProductDto){
-    //     return this.productRepository.updateProduct(id, body)
-    // }
-    //
-    // async updateProductCategory(id: number, category: CategoryEnum): Promise<Product> {
-    //
-    //     const product = await this.getProductById(id)
-    //     product.category = category
-    //
-    //     await product.save()
-    //     return product
-    // }
+
+    async updateProduct(id: number, body: UpdateProductDto)  {
+        return await this.productRepository.updateProduct(id, body)
+    }
+
 
 
 }

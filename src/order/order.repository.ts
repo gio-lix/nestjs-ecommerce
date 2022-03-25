@@ -6,7 +6,9 @@ import {UpdateOrderDto} from "./dto/update-order.dto";
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
     async createOrder(createOrderDto: CreateOrderDto, id: number) {
+
         const {status,quantity,price,productId} = createOrderDto
+
 
         return await this.save({
             quantity: quantity,

@@ -23,9 +23,10 @@ export class Order extends BaseEntity {
     @CreateDateColumn()
     updateAt: Date;
 
-    @ManyToOne(type => Product )
-    @JoinColumn({name: 'productId'})
+    @ManyToOne(type => Product, product => product.order )
     product: Product
+
+
 
     @ManyToOne(type => UserEntity )
     @JoinColumn({name: 'userId'})

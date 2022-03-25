@@ -1,4 +1,13 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToMany,
+    ManyToOne, OneToMany,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {CategoryEnum} from "../../category/category-enum";
 import {UserEntity} from "../../user/entities/user.entity";
 import {CategoryEntity} from "../../category/entities/category.entity";
@@ -32,8 +41,7 @@ export class Product extends BaseEntity{
     @JoinColumn({name: 'category'})
     category: CategoryEntity
 
-    // @ManyToOne(type => Order )
-    // @JoinColumn({name: 'order'})
-    // order: Order
-
+    @OneToMany(() => Order, order => order.product  )
+    order: Order[]
+// @JoinColumn({name: 'orderId'})
 }

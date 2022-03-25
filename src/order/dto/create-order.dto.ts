@@ -12,11 +12,6 @@ export class CreateOrderDto {
     @IsNumber()
     quantity: number
 
-    // @IsString()
-    // orderId: string;
-
-    // @IsOptional()
-    // @IsNumberString()
     @IsNumber()
     productId: number
 

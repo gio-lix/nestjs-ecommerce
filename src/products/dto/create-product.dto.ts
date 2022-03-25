@@ -1,4 +1,4 @@
-import {IsEnum, IsNumber, IsString} from "class-validator";
+import {IsEnum, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class CreateProductDto {
     @IsString()
@@ -13,8 +13,8 @@ export class CreateProductDto {
     @IsString()
     category: string
 
-    // //check
-    // @IsString()
-    // order?: string
+    @IsOptional()
+    @IsString()
+    order?: string
 
 }

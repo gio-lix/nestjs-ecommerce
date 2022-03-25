@@ -13,7 +13,6 @@ export class CategoryController {
         return this.categoryService.getAllCategory();
     }
 
-
     @Get('/:id')
     findOne(@Param('id') id: number) {
         return this.categoryService.findOne(id);
@@ -24,16 +23,4 @@ export class CategoryController {
         const dto: any = {category: body}
         return this.categoryService.create(dto);
     }
-
-
-
-// @Patch(':id')
-// update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-//   return this.categoryService.update(+id, updateCategoryDto);
-// }
-//
-// @Delete(':id')
-// remove(@Param('id') id: string) {
-//   return this.categoryService.remove(+id);
-// }
 }

@@ -2,6 +2,8 @@ import {EntityRepository, Repository} from "typeorm";
 import {Product} from "./entities/product.entity";
 import {CreateProductDto} from "./dto/create-product.dto";
 import {FilterProductDto} from "./dto/filter-product.dto";
+import {UpdateProductDto} from "./dto/update-product.dto";
+import {NotFoundException} from "@nestjs/common";
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
@@ -18,8 +20,6 @@ export class ProductRepository extends Repository<Product> {
     }
 
     async allProducts(filterDto: FilterProductDto) {
-
-
         const {categoryId, title, search} = filterDto
 
         const cd = await this.createQueryBuilder('b')
@@ -41,4 +41,25 @@ export class ProductRepository extends Repository<Product> {
     }
 
 
+    async deleteProductById(id: number): Promise<void> {
+
+        const found = await this.findOne(id, { relations: ['order'] })
+
+        if (found.order.length) {
+            throw new NotFoundException(`This item "${found.title}" is listed in the order box.`)
+        }
+        const result = await this.delete(id)
+    }
+
+
+    async updateProduct(id: number, body: UpdateProductDto) {
+        const found = await this.findOne(id)
+
+        if (!found) {
+            throw new NotFoundException("Not Found")
+        }
+        // @ts-ignore
+        return await this.update(id, body)
+
+    }
 }
